@@ -390,6 +390,7 @@ export declare interface RemoteVideoConfig {
 		receiveWhenViewVisible?: boolean;
 		viewRoot?: HTMLElement;
 		canvasRender?: boolean;
+    poster?: string;
 	};
 }
 export declare interface StopRemoteVideoConfig {
