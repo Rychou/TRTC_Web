@@ -356,6 +356,7 @@ export declare interface NetworkQuality {
   uplinkLoss: number;
   downlinkRTT: number;
   downlinkLoss: number;
+  remoteNetworkQuality?: Record<string, NetworkQualityValue>;
   pingResults?: PingResults;
 }
 export declare const enum BannedReason {
@@ -1855,7 +1856,7 @@ export declare class TRTC {
    * @param {'contain' | 'cover' | 'fill'} [config.option.fillMode] - Video fill mode. The default is `cover`. Refer to the {@link https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit CSS object-fit} property.
    * @param {string | VideoProfile} [config.option.profile] - Video encoding parameters for the main video.
    * @param {string | boolean | VideoProfile} [config.option.small] - Video encoding parameters for the small video. Refer to {@tutorial 27-advanced-small-stream}
-   * @param {QOS_PREFERENCE_SMOOTH|QOS_PREFERENCE_CLEAR} [config.option.qosPreference] - Set the video encoding strategy for weak networks. Smooth first(default) ({@link module:TYPE.QOS_PREFERENCE_SMOOTH QOS_PREFERENCE_SMOOTH}) or Clear first ({@link module:TYPE.QOS_PREFERENCE_CLEAR QOS_ PREFERENCE_SMOOTH})
+   * @param {QOS_PREFERENCE_SMOOTH|QOS_PREFERENCE_CLEAR} [config.option.qosPreference] - Set the video encoding strategy for weak networks. Smooth first(default) ({@link module:TYPE.QOS_PREFERENCE_SMOOTH QOS_PREFERENCE_SMOOTH}) or Clear first ({@link module:TYPE.QOS_PREFERENCE_CLEAR QOS_PREFERENCE_CLEAR})
    * @param {0 | 90 | 180 | 270} [config.option.rotation] - Set the clockwise rotation angle of the local camera when publishing. Supports 90, 180, and 270
    * @throws
    * - {@link module:ERROR_CODE.ENV_NOT_SUPPORTED ENV_NOT_SUPPORTED}
@@ -1918,7 +1919,7 @@ export declare class TRTC {
    * @param {'contain' | 'cover' | 'fill'} [config.option.fillMode] - Video fill mode. Refer to the {@link https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit| CSS object-fit} property
    * @param {string | VideoProfile} [config.option.profile] - Video encoding parameters for the main stream
    * @param {string | boolean | VideoProfile} [config.option.small] - Video encoding parameters for the small video. Refer to {@tutorial 27-advanced-small-stream}
-   * @param {QOS_PREFERENCE_SMOOTH|QOS_PREFERENCE_CLEAR} [config.option.qosPreference] - Set the video encoding strategy for weak networks. Smooth first ({@link module:TYPE.QOS_PREFERENCE_SMOOTH QOS_PREFERENCE_SMOOTH}) or Clear first ({@link module:TYPE.QOS_PREFERENCE_CLEAR QOS_ PREFERENCE_SMOOTH})
+   * @param {QOS_PREFERENCE_SMOOTH|QOS_PREFERENCE_CLEAR} [config.option.qosPreference] - Set the video encoding strategy for weak networks. Smooth first ({@link module:TYPE.QOS_PREFERENCE_SMOOTH QOS_PREFERENCE_SMOOTH}) or Clear first ({@link module:TYPE.QOS_PREFERENCE_CLEAR QOS_PREFERENCE_CLEAR})
    * @param {0 | 90 | 180 | 270} [config.option.rotation] - Set the clockwise rotation angle of the local camera when publishing. Supports 90, 180, and 270
    * @throws
    * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}
@@ -1982,7 +1983,7 @@ export declare class TRTC {
    * @param {boolean} [config.option.systemAudio] - Whether to capture system audio. The default is false.
    * @param {'contain' | 'cover' | 'fill'} [config.option.fillMode] - Video fill mode. The default is `contain`, refer to {@link https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit CSS object-fit} property.
    * @param {ScreenShareProfile} [config.option.profile] - Screen sharing encoding configuration.
-   * @param {QOS_PREFERENCE_SMOOTH|QOS_PREFERENCE_CLEAR} [config.option.qosPreference] - Set the video encoding strategy for weak networks. Smooth first ({@link module:TYPE.QOS_PREFERENCE_SMOOTH QOS_PREFERENCE_SMOOTH}) or Clear first(default) ({@link module:TYPE.QOS_PREFERENCE_CLEAR QOS_ PREFERENCE_SMOOTH})
+   * @param {QOS_PREFERENCE_SMOOTH|QOS_PREFERENCE_CLEAR} [config.option.qosPreference] - Set the video encoding strategy for weak networks. Smooth first ({@link module:TYPE.QOS_PREFERENCE_SMOOTH QOS_PREFERENCE_SMOOTH}) or Clear first(default) ({@link module:TYPE.QOS_PREFERENCE_CLEAR QOS_PREFERENCE_CLEAR})
    * @param {HTMLElement} [config.option.captureElement] - Capture screen from the specified element of current tab. Available on Chrome 104+.
    * @param {'current-tab' | 'tab' | 'window' | 'monitor'} [config.option.preferDisplaySurface='monitor'] - The prefer display surface for screen sharing. Available on Chrome 94+.
    * - The default is monitor, which means that monitor capture will be displayed first in the Screen Sharing Capture pre-checkbox.
@@ -2010,7 +2011,7 @@ export declare class TRTC {
    * @param {boolean} [config.publish=true] - Whether to publish screen sharing to the room
    * @param {object} [config.option] - Screen sharing configuration
    * @param {'contain' | 'cover' | 'fill'} [config.option.fillMode] - Video fill mode. The default is `contain`, refer to {@link https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit CSS object-fit} property.
-   * @param {QOS_PREFERENCE_SMOOTH|QOS_PREFERENCE_CLEAR} [config.option.qosPreference] - Set the video encoding strategy for weak networks. Smooth first ({@link module:TYPE.QOS_PREFERENCE_SMOOTH QOS_PREFERENCE_SMOOTH}) or Clear first ({@link module:TYPE.QOS_PREFERENCE_CLEAR QOS_ PREFERENCE_SMOOTH})
+   * @param {QOS_PREFERENCE_SMOOTH|QOS_PREFERENCE_CLEAR} [config.option.qosPreference] - Set the video encoding strategy for weak networks. Smooth first ({@link module:TYPE.QOS_PREFERENCE_SMOOTH QOS_PREFERENCE_SMOOTH}) or Clear first ({@link module:TYPE.QOS_PREFERENCE_CLEAR QOS_PREFERENCE_CLEAR})
    * @throws
    * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}
    * - {@link module:ERROR_CODE.DEVICE_ERROR DEVICE_ERROR}
