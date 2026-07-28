@@ -8,6 +8,7 @@ export interface VideoMixerOptions {
   text?: TextSource[];
   image?: ImageSource[];
   video?: VideoSource[];
+  canvas?: CanvasSource[];
   onScreenShareStop?: (id: string) => void;
 }
 // 更新时画布配置变为可选
@@ -19,6 +20,7 @@ export type UpdateVideoMixerOptions = {
   text?: VideoMixerOptions['text'];
   image?: VideoMixerOptions['image'];
   video?: VideoMixerOptions['video'];
+  canvas?: VideoMixerOptions['canvas'];
 };
 
 export interface CanvasInfo {
@@ -48,6 +50,7 @@ export interface ScreenSource {
   videoTrack?: MediaStreamTrack;
   audioTrack?: MediaStreamTrack;
   useInternalTrack?: boolean;
+  applyResolutionConstraints?: boolean;
 }
 export interface TextSource {
   id: string;
@@ -64,6 +67,11 @@ export interface ImageSource {
 export interface VideoSource {
   id: string;
   url: string;
+  layout: LayerOption;
+}
+export interface CanvasSource {
+  id: string;
+  canvas: HTMLCanvasElement | OffscreenCanvas;
   layout: LayerOption;
 }
 

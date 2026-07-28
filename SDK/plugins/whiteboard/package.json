@@ -1,0 +1,23 @@
+{
+  "name": "@rtc-plugin/whiteboard",
+  "version": "5.19.0",
+  "description": "TRTC Web SDK Whiteboard plugin",
+  "main": "./whiteboard.esm.js",
+  "module": "./whiteboard.esm.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:LiteAVSDK/TRTC_Web.git"
+  },
+  "homepage": "",
+  "keywords": [
+    "webrtc",
+    "TRTC",
+    "rtc",
+    "javascript",
+    "video",
+    "audio",
+    "real-time communication",
+    "whiteboard"
+  ],
+  "types": "./whiteboard.esm.d.ts"
+}
