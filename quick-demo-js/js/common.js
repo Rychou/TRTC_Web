@@ -62,7 +62,20 @@ function addStreamView(remoteId) {
 		remoteDiv = document.createElement('div');
 		remoteDiv.setAttribute('id', remoteId);
 		remoteDiv.setAttribute('class', 'remote');
+		remoteDiv.addEventListener('dblclick', handleRemoteVideoDblClick);
 		playerContainer.appendChild(remoteDiv);
+	}
+}
+
+// 双击远端视频切换放大/缩小
+function handleRemoteVideoDblClick(e) {
+	const target = e.currentTarget;
+	if (target.classList.contains('enlarged')) {
+		target.classList.remove('enlarged');
+	} else {
+		// 先缩小其他已放大的视频
+		document.querySelectorAll('.remote.enlarged').forEach(el => el.classList.remove('enlarged'));
+		target.classList.add('enlarged');
 	}
 }
 
