@@ -173,6 +173,15 @@ ul {
   min-height: 100px;
   margin: 0 10px 10px 0;
   position: relative;
+  cursor: pointer;
+  transition: width 0.3s ease, height 0.3s ease;
+}
+
+/* 双击放大：宽度撑满容器 */
+.remote.enlarged {
+  width: 100% !important;
+  min-height: 480px;
+  margin-right: 0;
 }
 
 #userIdContainer {
