@@ -11,8 +11,9 @@ import { SmallStreamAutoSwitcher, SmallStreamAutoSwitcherOptions } from './plugi
 import { Chorus, StartChorusOption, UpdateChorusOption } from './plugins/chorus';
 import { LEBPlayer, StartLEBPlayerOption, UpdateLEBPlayerOption } from './plugins/lebplayer';
 import { RealtimeTranscriber, StartRealtimeTranscriberOption, StopRealtimeTranscriberOption } from './plugins/realtime-transcriber';
+import { AudioPlayerOptions, AudioPlayerUpdateOptions, AudioPlayerStopOptions } from './plugins/audio-player/audio-player.esm';
 
-export { CDNStreamingOptions, DeviceDetectorOptions, VirtualBackgroundOptions, UpdateVirtualBackgroundOptions, WatermarkOptions, BeautyOptions, UpdateBeautyOptions, BasicBeautyOptions, StartCrossRoomOption, UpdateCrossRoomOption, StopCrossRoomOption, SmallStreamAutoSwitcherOptions, VideoMixerOptions, UpdateVideoMixerOptions, StartRealtimeTranscriberOption, StopRealtimeTranscriberOption };
+export { CDNStreamingOptions, DeviceDetectorOptions, VirtualBackgroundOptions, UpdateVirtualBackgroundOptions, WatermarkOptions, BeautyOptions, UpdateBeautyOptions, BasicBeautyOptions, StartCrossRoomOption, UpdateCrossRoomOption, StopCrossRoomOption, SmallStreamAutoSwitcherOptions, VideoMixerOptions, UpdateVideoMixerOptions, StartRealtimeTranscriberOption, StopRealtimeTranscriberOption, AudioPlayerOptions, AudioPlayerUpdateOptions, AudioPlayerStopOptions };
 type TRTCPlugin = typeof CrossRoom | typeof CDNStreaming | typeof DeviceDetector | typeof VirtualBackground | typeof Watermark | typeof Beauty | typeof BasicBeauty | typeof CustomEncryption | typeof SmallStreamAutoSwitcher | typeof VideoMixer | typeof Chorus | typeof LEBPlayer | typeof RealtimeTranscriber;
 export interface PlaybackQualityStream {
   name: string;
@@ -44,9 +45,8 @@ export type ExperimentalAPIFunctionMap = {
 export interface RequestPictureInPictureOptions { enable: boolean }
 export interface RequestFullScreenOptions { enable: boolean }
 export interface RemotePlayerOptions { userId: string, streamType?: TRTCStreamType }
-interface EnablePreconnectParams { enable: true; userId: string; userSig: string; sdkAppId: number; }
-interface ClosePreconnectParams { enable: false; userId?: never; userSig?: never; sdkAppId?: never;
-}
+export interface EnablePreconnectParams { enable: true; userId: string; userSig: string; sdkAppId: number; roomId?: number; strRoomId?: string; }
+export interface ClosePreconnectParams { enable: false; userId?: never; userSig?: never; sdkAppId?: never; roomId?: never; strRoomId?: never; }
 export type PreconnectParams = EnablePreconnectParams | ClosePreconnectParams;
 
 export declare type PluginStartOptionsMap = {
@@ -67,6 +67,7 @@ export declare type PluginStartOptionsMap = {
   'Chorus': StartChorusOption;
   'LEBPlayer': StartLEBPlayerOption;
   'RealtimeTranscriber': StartRealtimeTranscriberOption;
+  'AudioPlayer': AudioPlayerOptions;
 };
 
 export declare type PluginUpdateOptionsMap = {
@@ -83,6 +84,7 @@ export declare type PluginUpdateOptionsMap = {
   'Debug': UpdateDebugOptions;
   'Chorus': UpdateChorusOption;
   'LEBPlayer': UpdateLEBPlayerOption;
+  'AudioPlayer': AudioPlayerUpdateOptions;
 };
 
 export declare type PluginStopOptionsMap = {
@@ -103,6 +105,7 @@ export declare type PluginStopOptionsMap = {
   'Chorus': undefined;
   'LEBPlayer': undefined;
   'RealtimeTranscriber': StopRealtimeTranscriberOption;
+  'AudioPlayer': AudioPlayerStopOptions;
 };
 
 export declare class RtcError extends Error implements RTCErrorInterface {
@@ -2380,6 +2383,17 @@ export declare class TRTC {
    * await trtc.callExperimentalAPI('enableAudioFrameEvent', { enable: true, userId: '', port })
    * // Cancel callback of local microphone pcm data
    * await trtc.callExperimentalAPI('enableAudioFrameEvent', { enable: false, userId: '' })
+   *
+   * // Preconnect - start preconnect before entering room
+   * await trtc.callExperimentalAPI('preconnect', {
+   *   enable: true,
+   *   sdkAppId: 1400000000,
+   *   userId: 'user_123',
+   *   userSig: 'xxx',
+   *   roomId: 12345
+   * })
+   * // Close preconnect if needed
+   * await trtc.callExperimentalAPI('preconnect', { enable: false })
    */
   callExperimentalAPI<T extends keyof ExperimentalAPIFunctionMap, O extends ExperimentalAPIFunctionMap[T]>(name: O extends undefined ? never : T, options: O): Promise<void>;
   callExperimentalAPI<T extends keyof ExperimentalAPIFunctionMap, O extends ExperimentalAPIFunctionMap[T]>(name: O extends undefined ? T : never): Promise<void>;
