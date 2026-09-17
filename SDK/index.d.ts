@@ -479,6 +479,7 @@ export declare interface ScreenShareConfig {
     preferDisplaySurface?: 'current-tab' | 'tab' | 'window' | 'monitor';
     selfBrowserSurface?: 'include' | 'exclude';
     qosPreference?: typeof TRTCType.QOS_PREFERENCE_SMOOTH | typeof TRTCType.QOS_PREFERENCE_CLEAR;
+    enableFocusTarget?: boolean;
   };
 }
 export declare interface UpdateScreenShareConfig extends ScreenShareConfig {
@@ -1991,6 +1992,9 @@ export declare class TRTC {
    * @param {'current-tab' | 'tab' | 'window' | 'monitor'} [config.option.preferDisplaySurface='monitor'] - The prefer display surface for screen sharing. Available on Chrome 94+.
    * - The default is monitor, which means that monitor capture will be displayed first in the Screen Sharing Capture pre-checkbox.
    * - If you fill in 'current-tab', the pre-checkbox will only show the current page.
+   * @param {boolean} [config.option.enableFocusTarget = true] - Whether to move the browser focus to the captured tab/window when screen capture starts. Available on Chrome 109+. 
+   * - `true`: move the browser focus to the captured tab/window.
+   * - `false`: keep the browser focus on the current page.
    * @throws
    * - {@link module:ERROR_CODE.ENV_NOT_SUPPORTED ENV_NOT_SUPPORTED}
    * - {@link module:ERROR_CODE.INVALID_PARAMETER INVALID_PARAMETER}
