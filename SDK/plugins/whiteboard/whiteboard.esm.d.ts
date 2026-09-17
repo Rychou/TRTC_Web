@@ -70,38 +70,58 @@ export type EraserObjectScope = 'self' | 'all';
  * See doc.md §3.3.
  */
 export enum WhiteboardEvent {
-  STARTED                 = 'started',
-  STOPPED                 = 'stopped',
+  /**
+   * Host + Guest: the whiteboard became available — it now responds to
+   * interaction and can be drawn on. See {@link WhiteboardAvailableReason}.
+   */
+  AVAILABLE               = 'available',
+  /**
+   * Host + Guest: the whiteboard became unavailable — interaction stops and
+   * drawing is disabled. See {@link WhiteboardUnavailableReason}.
+   */
+  UNAVAILABLE             = 'unavailable',
   ERROR                   = 'error',
-  /** Guest only: emitted when the ACK feedback loop enters `stalled`. */
-  STALLED                 = 'stalled',
-  /** Guest only: emitted when a SESSION_START batch resend exits stalled. */
-  RESUMED                 = 'resumed',
   /** Host + Guest: undo availability changed. */
   UNDO_STATE_CHANGED      = 'undo-state-changed',
   /** Host + Guest: redo availability changed. */
   REDO_STATE_CHANGED      = 'redo-state-changed',
 }
 
-/** Reason why the guest ACK feedback loop entered `stalled`. */
-export type SessionStalledReason = 'silence' | 'queue-full' | 'ack-timeout';
+/**
+ * Reasons carried by `WhiteboardEvent.AVAILABLE`.
+ * - `started`: a whiteboard session became active (host init done + SESSION_START
+ *   broadcast; guest received SESSION_START — including a late one after a
+ *   pre-session silence wait).
+ * - `resume`: an already-started guest session recovered from a stalled state
+ *   (ACK feedback loop STALLED → NORMAL/DEGRADED).
+ */
+export type WhiteboardAvailableReason = 'started' | 'resume';
 
-/** Payload carried by `STALLED`. */
-export interface WhiteboardSessionStalledInfo {
-  /** Target host userId. */
+/**
+ * Reasons carried by `WhiteboardEvent.UNAVAILABLE`.
+ * - `end`: the session ended (host stopped and broadcast SESSION_END; guest
+ *   received SESSION_END from the host).
+ * - `silence`: no SESSION_START within the handshake window, or the ACK
+ *   feedback loop stalled on heartbeat silence.
+ * - `queue-full`: the guest pending-ACK queue reached its hard cap.
+ * - `ack-timeout`: the guest pending-ACK queue had no ACK within the timeout.
+ */
+export type WhiteboardUnavailableReason = 'end' | 'silence' | 'queue-full' | 'ack-timeout';
+
+/** Payload carried by `AVAILABLE`. */
+export interface WhiteboardAvailableInfo {
+  /** Host's userId for a guest, `''` for the host. */
   targetUser: string;
-  /** Number of pending ACK items preserved for SESSION_START batch resend. */
-  pendingCount: number;
-  /** `silence` for 5 s target-host silence; `queue-full` for queue cap protection. */
-  reason: SessionStalledReason;
+  /** Why the whiteboard became available. */
+  reason: WhiteboardAvailableReason;
 }
 
-/** Payload carried by `RESUMED`. */
-export interface WhiteboardSessionResumedInfo {
-  /** Target host userId. */
+/** Payload carried by `UNAVAILABLE`. */
+export interface WhiteboardUnavailableInfo {
+  /** Host's userId for a guest, `''` for the host. */
   targetUser: string;
-  /** Number of pending ACK items put back on the wire. */
-  resentCount: number;
+  /** Why the whiteboard became unavailable. */
+  reason: WhiteboardUnavailableReason;
 }
 
 /**
@@ -274,7 +294,7 @@ export default class Whiteboard {
 
   /**
    * Public event name enum:
-   * `Whiteboard.EVENT.STARTED`, `Whiteboard.EVENT.STOPPED`, …
+   * `Whiteboard.EVENT.AVAILABLE`, `Whiteboard.EVENT.UNAVAILABLE`, …
    */
   static EVENT: typeof WhiteboardEvent;
 
@@ -309,23 +329,17 @@ export default class Whiteboard {
 
   // ─── EventEmitter surface (typed overloads) ───────────────────────────────
 
-  /** Subscribe to `STARTED`. */
-  on(event: WhiteboardEvent.STARTED                  | 'started',                   handler: () => void): this;
-  /** Subscribe to `STOPPED`. */
-  on(event: WhiteboardEvent.STOPPED                  | 'stopped',                   handler: () => void): this;
+  /** Subscribe to `AVAILABLE` (host + guest). */
+  on(event: WhiteboardEvent.AVAILABLE                | 'available',                 handler: (info: WhiteboardAvailableInfo) => void): this;
+  /** Subscribe to `UNAVAILABLE` (host + guest). */
+  on(event: WhiteboardEvent.UNAVAILABLE              | 'unavailable',               handler: (info: WhiteboardUnavailableInfo) => void): this;
   /** Subscribe to `ERROR`. */
   on(event: WhiteboardEvent.ERROR                    | 'error',                     handler: (err: Error) => void): this;
-  /** Subscribe to `STALLED` (guest only). */
-  on(event: WhiteboardEvent.STALLED                  | 'stalled',                   handler: (info: WhiteboardSessionStalledInfo) => void): this;
-  /** Subscribe to `RESUMED` (guest only). */
-  on(event: WhiteboardEvent.RESUMED                  | 'resumed',                   handler: (info: WhiteboardSessionResumedInfo) => void): this;
 
   /** Subscribe-once helpers (same overloads as `on`). */
-  once(event: WhiteboardEvent.STARTED                | 'started',                   handler: () => void): this;
-  once(event: WhiteboardEvent.STOPPED                | 'stopped',                   handler: () => void): this;
+  once(event: WhiteboardEvent.AVAILABLE              | 'available',                 handler: (info: WhiteboardAvailableInfo) => void): this;
+  once(event: WhiteboardEvent.UNAVAILABLE            | 'unavailable',               handler: (info: WhiteboardUnavailableInfo) => void): this;
   once(event: WhiteboardEvent.ERROR                  | 'error',                     handler: (err: Error) => void): this;
-  once(event: WhiteboardEvent.STALLED                | 'stalled',                   handler: (info: WhiteboardSessionStalledInfo) => void): this;
-  once(event: WhiteboardEvent.RESUMED                | 'resumed',                   handler: (info: WhiteboardSessionResumedInfo) => void): this;
 
   /** Unsubscribe a previously registered handler. Pass no `handler` to remove all for the event. */
   off(event: WhiteboardEvent | `${WhiteboardEvent}`, handler?: (...args: any[]) => void): this;

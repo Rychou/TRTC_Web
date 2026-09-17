@@ -51,6 +51,9 @@ export interface ScreenSource {
   audioTrack?: MediaStreamTrack;
   useInternalTrack?: boolean;
   applyResolutionConstraints?: boolean;
+  // 是否在屏幕采集开始时将浏览器焦点切换到被采集的标签页/窗口（Chrome 109+）。
+  // true：focus-captured-surface；false：no-focus-change；不设置则不调用 setFocusBehavior
+  enableFocusTarget?: boolean;
 }
 export interface TextSource {
   id: string;
